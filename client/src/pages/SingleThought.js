@@ -1,11 +1,12 @@
 import React from 'react';
-// To grab a page location from the URL
 import { useParams } from 'react-router-dom';
 
+import ReactionList from '../components/ReactionList';
+import ReactionForm from '../components/ReactionForm';
+
+import Auth from '../utils/auth';
 import { useQuery } from '@apollo/react-hooks';
 import { QUERY_THOUGHT } from '../utils/queries';
-
-import ReactionList from '../components/ReactionList';
 
 const SingleThought = props => {
   const { id: thoughtId } = useParams();
@@ -21,21 +22,23 @@ const SingleThought = props => {
   }
 
   return (
-    < div >
+    <div>
       <div className="card mb-3">
         <p className="card-header">
           <span style={{ fontWeight: 700 }} className="text-light">
             {thought.username}
           </span>{' '}
-        thought on {thought.createdAt}
+          thought on {thought.createdAt}
         </p>
         <div className="card-body">
           <p>{thought.thoughtText}</p>
         </div>
       </div>
 
-      { thought.reactionCount > 0 && <ReactionList reactions={thought.reactions} />}
-    </div >
+      {thought.reactionCount > 0 && <ReactionList reactions={thought.reactions} />}
+
+      {Auth.loggedIn() && <ReactionForm thoughtId={thought._id} />}
+    </div>
   );
 };
 
